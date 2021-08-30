@@ -1,0 +1,102 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://sprites/net_post.png" type="Texture" id=1]
+[ext_resource path="res://sprites/net_end.png" type="Texture" id=2]
+[ext_resource path="res://Net.gd" type="Script" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 2, 42 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 2, 90 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 2, 38 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 17, 2 )
+
+[node name="Net" type="Node2D"]
+script = ExtResource( 3 )
+net_color = Color( 1, 0.2, 0.239216, 1 )
+
+[node name="Post" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 0, 42 )
+texture = ExtResource( 2 )
+
+[node name="NetTop" type="Position2D" parent="."]
+
+[node name="NetBottom" type="Position2D" parent="."]
+position = Vector2( 0, 84 )
+
+[node name="NetBase" type="StaticBody2D" parent="."]
+collision_layer = 0
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NetBase"]
+visible = false
+position = Vector2( 0, 42 )
+shape = SubResource( 1 )
+
+[node name="NetPoleFrogCollision" type="StaticBody2D" parent="."]
+visible = false
+collision_layer = 1024
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NetPoleFrogCollision"]
+position = Vector2( 0, 90 )
+shape = SubResource( 2 )
+
+[node name="NetPoleBallCollision" type="StaticBody2D" parent="."]
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NetPoleBallCollision"]
+position = Vector2( 0, 174 )
+shape = SubResource( 2 )
+
+[node name="NetEnd" type="RigidBody2D" parent="." groups=[
+"net",
+]]
+position = Vector2( 0, 42 )
+collision_layer = 8
+collision_mask = 8
+mode = 2
+mass = 0.00102041
+gravity_scale = 0.0
+contacts_reported = 10
+contact_monitor = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NetEnd"]
+shape = SubResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="NetEnd"]
+visible = false
+position = Vector2( 0, 2 )
+texture = ExtResource( 2 )
+
+[node name="BottomCatcher" type="CollisionShape2D" parent="NetEnd"]
+position = Vector2( 0, 40 )
+shape = SubResource( 4 )
+disabled = true
+
+[node name="TopCatcher" type="CollisionShape2D" parent="NetEnd"]
+position = Vector2( 0, -40 )
+shape = SubResource( 4 )
+disabled = true
+
+[node name="GrooveJoint2D" type="GrooveJoint2D" parent="."]
+position = Vector2( 25, 40 )
+rotation = 1.5708
+node_a = NodePath("../NetEnd")
+node_b = NodePath("../NetBase")
+
+[node name="DampedSpringJoint2D" type="DampedSpringJoint2D" parent="."]
+position = Vector2( 24, 0 )
+rotation = 1.5708
+node_a = NodePath("../NetBase")
+node_b = NodePath("../NetEnd")
+stiffness = 0.5
+damping = 0.01

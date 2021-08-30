@@ -1,0 +1,381 @@
+[gd_scene load_steps=39 format=2]
+
+[ext_resource path="res://Frog.tscn" type="PackedScene" id=1]
+[ext_resource path="res://sprites/bg.png" type="Texture" id=2]
+[ext_resource path="res://Ball.tscn" type="PackedScene" id=3]
+[ext_resource path="res://sprites/border.png" type="Texture" id=4]
+[ext_resource path="res://Net.tscn" type="PackedScene" id=5]
+[ext_resource path="res://FrogP2.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Game.gd" type="Script" id=7]
+[ext_resource path="res://sprites/numbers.png" type="Texture" id=8]
+[ext_resource path="res://Camera2D.gd" type="Script" id=9]
+[ext_resource path="res://THEME.tres" type="Theme" id=10]
+[ext_resource path="res://sounds/Pickup_coin 11.wav" type="AudioStream" id=11]
+[ext_resource path="res://sounds/Pickup_coin 33 (2).wav" type="AudioStream" id=12]
+[ext_resource path="res://sprites/tally.png" type="Texture" id=13]
+[ext_resource path="res://Label.gd" type="Script" id=14]
+[ext_resource path="res://sounds/Pickup_coin 11 (1).wav" type="AudioStream" id=15]
+[ext_resource path="res://sprites/black.png" type="Texture" id=16]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 10, 128 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 10, 276 )
+
+[sub_resource type="ConvexPolygonShape2D" id=3]
+points = PoolVector2Array( 0, 0, 41, 0, 0, 41 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 39, 21 )
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 2, 128 )
+
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 37, 139 )
+
+[sub_resource type="AtlasTexture" id=7]
+atlas = ExtResource( 8 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=8]
+atlas = ExtResource( 8 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=9]
+atlas = ExtResource( 8 )
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=10]
+atlas = ExtResource( 8 )
+region = Rect2( 96, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=11]
+atlas = ExtResource( 8 )
+region = Rect2( 128, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=12]
+atlas = ExtResource( 8 )
+region = Rect2( 160, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=13]
+atlas = ExtResource( 8 )
+region = Rect2( 192, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=14]
+atlas = ExtResource( 8 )
+region = Rect2( 224, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=15]
+atlas = ExtResource( 8 )
+region = Rect2( 256, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=16]
+atlas = ExtResource( 8 )
+region = Rect2( 288, 0, 32, 32 )
+
+[sub_resource type="SpriteFrames" id=17]
+animations = [ {
+"frames": [ SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ), SubResource( 11 ), SubResource( 12 ), SubResource( 13 ), SubResource( 14 ), SubResource( 15 ), SubResource( 16 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="AtlasTexture" id=18]
+atlas = ExtResource( 13 )
+region = Rect2( 0, 0, 44, 32 )
+
+[sub_resource type="AtlasTexture" id=19]
+atlas = ExtResource( 13 )
+region = Rect2( 44, 0, 44, 32 )
+
+[sub_resource type="AtlasTexture" id=20]
+atlas = ExtResource( 13 )
+region = Rect2( 88, 0, 44, 32 )
+
+[sub_resource type="AtlasTexture" id=21]
+atlas = ExtResource( 13 )
+region = Rect2( 132, 0, 44, 32 )
+
+[sub_resource type="SpriteFrames" id=22]
+animations = [ {
+"frames": [ SubResource( 18 ), SubResource( 19 ), SubResource( 20 ), SubResource( 21 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[node name="Game" type="Node2D"]
+pause_mode = 2
+script = ExtResource( 7 )
+max_score = 10
+
+[node name="Bg" type="Sprite" parent="."]
+z_index = -1000
+texture = ExtResource( 2 )
+centered = false
+__meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true
+}
+
+[node name="Frog" parent="." instance=ExtResource( 1 )]
+pause_mode = 1
+position = Vector2( -71, 216 )
+angular_damp = 2.575
+
+[node name="FrogP2" parent="." instance=ExtResource( 6 )]
+pause_mode = 1
+position = Vector2( 570, 209 )
+
+[node name="Border1" type="Sprite" parent="."]
+z_index = 2
+texture = ExtResource( 4 )
+centered = false
+
+[node name="Border2" type="Sprite" parent="."]
+position = Vector2( 256, 0 )
+z_index = 2
+texture = ExtResource( 4 )
+centered = false
+flip_h = true
+
+[node name="Bounds" type="StaticBody2D" parent="." groups=[
+"bounds",
+]]
+z_index = 1
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bounds"]
+position = Vector2( -8, 128 )
+shape = SubResource( 1 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Bounds"]
+position = Vector2( 520, 128 )
+shape = SubResource( 1 )
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Bounds"]
+position = Vector2( 256, -9 )
+rotation = -1.5708
+shape = SubResource( 2 )
+
+[node name="Corner1" type="CollisionShape2D" parent="Bounds"]
+position = Vector2( 77, 1 )
+shape = SubResource( 3 )
+
+[node name="Corner4" type="CollisionShape2D" parent="Bounds"]
+position = Vector2( 435, 1 )
+rotation = 1.5708
+shape = SubResource( 3 )
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="Bounds"]
+position = Vector2( 38, 21 )
+shape = SubResource( 4 )
+
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="Bounds"]
+position = Vector2( 38, 235 )
+shape = SubResource( 4 )
+
+[node name="CollisionShape2D7" type="CollisionShape2D" parent="Bounds"]
+position = Vector2( 474, 21 )
+shape = SubResource( 4 )
+
+[node name="CollisionShape2D8" type="CollisionShape2D" parent="Bounds"]
+position = Vector2( 474, 235 )
+shape = SubResource( 4 )
+
+[node name="Floor" type="StaticBody2D" parent="." groups=[
+"bounds",
+"floor",
+]]
+z_index = 1
+collision_mask = 0
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Floor"]
+position = Vector2( 256, 264 )
+rotation = -1.5708
+shape = SubResource( 2 )
+
+[node name="Corner2" type="CollisionShape2D" parent="Floor"]
+position = Vector2( 77, 255 )
+rotation = -1.5708
+shape = SubResource( 3 )
+
+[node name="Corner3" type="CollisionShape2D" parent="Floor"]
+position = Vector2( 435, 255 )
+rotation = 3.14159
+shape = SubResource( 3 )
+
+[node name="Wall" type="StaticBody2D" parent="."]
+z_index = 1
+collision_layer = 32
+collision_mask = 0
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="Wall"]
+position = Vector2( 256, 128 )
+shape = SubResource( 5 )
+
+[node name="Ball" parent="." instance=ExtResource( 3 )]
+position = Vector2( 247, -65 )
+gravity_scale = 1.5
+
+[node name="Net" parent="." instance=ExtResource( 5 )]
+position = Vector2( 256, 128 )
+
+[node name="P1OutZone" type="Area2D" parent="."]
+monitorable = false
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="P1OutZone"]
+position = Vector2( 28, 127 )
+shape = SubResource( 6 )
+
+[node name="P2OutZone" type="Area2D" parent="."]
+monitorable = false
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="P2OutZone"]
+position = Vector2( 484, 127 )
+shape = SubResource( 6 )
+
+[node name="P1Score" type="AnimatedSprite" parent="."]
+position = Vector2( 38, 21 )
+z_index = 2
+frames = SubResource( 17 )
+
+[node name="P2Score" type="AnimatedSprite" parent="."]
+position = Vector2( 38, 21 )
+z_index = 2
+frames = SubResource( 17 )
+
+[node name="FreezeTimer" type="Timer" parent="."]
+pause_mode = 2
+wait_time = 0.25
+one_shot = true
+
+[node name="HitFreezeTimer" type="Timer" parent="."]
+pause_mode = 2
+wait_time = 0.03
+one_shot = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 256, 128 )
+current = true
+process_mode = 0
+script = ExtResource( 9 )
+
+[node name="Tween" type="Tween" parent="Camera2D"]
+
+[node name="StartScreen" type="RichTextLabel" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 105.0
+margin_top = 40.0
+margin_right = 407.0
+margin_bottom = 256.0
+rect_pivot_offset = Vector2( 350, 42 )
+theme = ExtResource( 10 )
+bbcode_enabled = true
+bbcode_text = "[center][color=#64d26b]Leg Frogs[/color][/center]
+
+controls:
+P1: Z/X
+P2: Left/Right (or mouse buttons)
+ESC to quit
+F11 to fullscreen"
+text = "Leg Frogs
+
+controls:
+P1: Z/X
+P2: Left/Right (or mouse buttons)
+ESC to quit
+F11 to fullscreen"
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="CheckBox" type="CheckBox" parent="StartScreen"]
+margin_left = 117.0
+margin_top = 65.0
+margin_right = 185.0
+margin_bottom = 89.0
+text = "vs ai"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="StartScreen"]
+margin_left = 121.0
+margin_top = 91.0
+margin_right = 181.0
+margin_bottom = 115.0
+text = "PLAY"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Score" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 11 )
+bus = "Fx"
+
+[node name="EndGame" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 15 )
+bus = "Fx"
+
+[node name="GameStart" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 12 )
+bus = "Fx"
+
+[node name="P1Tally" type="AnimatedSprite" parent="."]
+position = Vector2( 38, 235 )
+z_index = 2
+frames = SubResource( 22 )
+frame = 3
+
+[node name="P2Tally" type="AnimatedSprite" parent="."]
+position = Vector2( 474, 235 )
+z_index = 2
+frames = SubResource( 22 )
+frame = 3
+flip_h = true
+
+[node name="Blackout1" type="Sprite" parent="."]
+position = Vector2( 256, 319 )
+z_index = 1
+texture = ExtResource( 16 )
+
+[node name="Blackout2" type="Sprite" parent="."]
+position = Vector2( 256, -63 )
+z_index = 1
+texture = ExtResource( 16 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = 119.0
+margin_top = 128.0
+margin_right = 199.0
+margin_bottom = 142.0
+theme = ExtResource( 10 )
+custom_colors/font_color = Color( 1, 0.2, 0.239216, 1 )
+text = "WINNER!!!"
+align = 1
+script = ExtResource( 14 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Flash" type="Timer" parent="Label"]
+wait_time = 0.032
+autostart = true
+
+[connection signal="timeout" from="FreezeTimer" to="." method="_on_FreezeTimer_timeout"]
+[connection signal="timeout" from="HitFreezeTimer" to="." method="_on_HitFreezeTimer_timeout"]
+[connection signal="toggled" from="StartScreen/CheckBox" to="." method="_on_CheckBox_toggled"]
+[connection signal="pressed" from="StartScreen/Button" to="." method="_on_Button_pressed"]
+[connection signal="timeout" from="Label/Flash" to="Label" method="_on_Flash_timeout"]

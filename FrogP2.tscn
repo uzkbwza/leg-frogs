@@ -1,0 +1,128 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Frog.gd" type="Script" id=1]
+[ext_resource path="res://sprites/frogp2.png" type="Texture" id=2]
+[ext_resource path="res://BallHitter.gd" type="Script" id=3]
+[ext_resource path="res://FootP2.tscn" type="PackedScene" id=4]
+
+[sub_resource type="PhysicsMaterial" id=1]
+rough = true
+bounce = 0.25
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 7.0
+
+[sub_resource type="CapsuleShape2D" id=3]
+radius = 7.0
+height = 2.0
+
+[sub_resource type="CircleShape2D" id=4]
+radius = 5.0
+
+[sub_resource type="CircleShape2D" id=5]
+radius = 4.0
+
+[sub_resource type="CapsuleShape2D" id=6]
+radius = 2.0
+height = 6.0
+
+[node name="FrogP2" type="RigidBody2D"]
+collision_layer = 2
+collision_mask = 1057
+mass = 0.5
+physics_material_override = SubResource( 1 )
+gravity_scale = 3.0
+angular_damp = 2.5
+script = ExtResource( 1 )
+leg_color = Color( 0.0156863, 0.341176, 0.603922, 1 )
+side = 1
+
+[node name="Sprite" type="Sprite" parent="."]
+z_index = 1
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+z_index = 1
+shape = SubResource( 2 )
+
+[node name="LFoot" parent="." instance=ExtResource( 4 )]
+position = Vector2( -8, 7 )
+input_action = "left_foot_p2"
+p2 = true
+
+[node name="RFoot" parent="." instance=ExtResource( 4 )]
+position = Vector2( 8, 7 )
+left = false
+input_action = "right_foot_p2"
+p2 = true
+
+[node name="ObjectCollider" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ObjectCollider"]
+z_index = 1
+shape = SubResource( 3 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="ObjectCollider"]
+position = Vector2( -3, 3 )
+z_index = 1
+shape = SubResource( 4 )
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="ObjectCollider"]
+position = Vector2( 3, 3 )
+z_index = 1
+shape = SubResource( 4 )
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="ObjectCollider"]
+position = Vector2( 3, -4 )
+z_index = 1
+shape = SubResource( 5 )
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="ObjectCollider"]
+position = Vector2( -3, -4 )
+z_index = 1
+shape = SubResource( 5 )
+
+[node name="LeftHipCollider" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftHipCollider"]
+z_index = 1
+shape = SubResource( 6 )
+
+[node name="LeftKneeCollider" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftKneeCollider"]
+z_index = 1
+shape = SubResource( 6 )
+
+[node name="RightHipCollider" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightHipCollider"]
+z_index = 1
+shape = SubResource( 6 )
+
+[node name="RightKneeCollider" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightKneeCollider"]
+z_index = 1
+shape = SubResource( 6 )
+
+[node name="AiCycle" type="Timer" parent="."]
+process_mode = 0
+wait_time = 0.7
+
+[connection signal="timeout" from="AiCycle" to="." method="_on_AiCycle_timeout"]
