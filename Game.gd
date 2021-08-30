@@ -22,6 +22,13 @@ onready var p2 = $FrogP2
 onready var ball = $Ball
 var scored_side
 var rng = RandomNumberGenerator.new()
+var side_goals = true
+var net = true
+var floor_goals = false
+var freestyle = false
+var initiated = false
+var divider = true
+var winner_serves = true
 
 var scores = {
 	Side.Left: 0,
@@ -35,59 +42,75 @@ onready var score_sprites = {
 export var max_score = 1
 
 # Called when the node enters the scene tree for the first time.
-func start(side=Side.Left):
+func start(side=[Side.Left, Side.Right][rng.randi() % 2]):
+	if !initiated:
+		if !side_goals:
+			$Border1.hide()
+			$Border2.hide()
+			$Bg.hide()
+			$P1OutZone/CollisionShape2D.call_deferred("set", "disabled", true)
+			$P2OutZone/CollisionShape2D.call_deferred("set", "disabled", true)
+			$NoSideGoalsFloor/CollisionShape2D6.call_deferred("set", "disabled", false)
+			$NoSideGoalsFloor/CollisionShape2D8.call_deferred("set", "disabled", false)
+		if !net:
+			$Net.queue_free()
+		if !divider:
+			$Wall/CollisionShape2D5.call_deferred("set", "disabled", true)
+			
 	winner = null
 	$P1Tally.frame = 0
 	$P2Tally.frame = 0
 	if $StartScreen.visible:
 		$StartScreen.hide()
-	var p1_position = Vector2(256 - x_pos, y_pos)
-	var p2_position = Vector2(256 + x_pos, y_pos)
-	var ball_position = Vector2()
-	if side == Side.Left:
-		ball_position = p1_position
-		ball_position.x += ball_in_front
-	else:
-		ball_position = p2_position
-		ball_position.x -= ball_in_front
-	ball_position.y -= ball_height
-	ball.reset(ball_position)
-	p1.reset(p1_position)
-	p2.reset(p2_position)
-	var first_match = true
-	for score in scores.values():
-		if score != 0:
-			first_match = false
-	if first_match:
-		$GameStart.play()
-#	ball.apply_central_impulse(Vector2.UP * ball_serve_power)
-#	yield(get_tree(), "idle_frame")
-#	ball.sleeping = true
-
-	$Net.reset_net(true)
+	if !freestyle or !initiated:
+		var p1_position = Vector2(256 - x_pos, y_pos)
+		var p2_position = Vector2(256 + x_pos, y_pos)
+		var ball_position = Vector2()
+		if side == Side.Left:
+			ball_position = p1_position
+			ball_position.x += ball_in_front
+		else:
+			ball_position = p2_position
+			ball_position.x -= ball_in_front
+		ball_position.y -= ball_height
+		ball.reset(ball_position)
+		p1.reset(p1_position)
+		p2.reset(p2_position)
+		var first_match = true
+		for score in scores.values():
+			if score != 0:
+				first_match = false
+		if first_match:
+			$GameStart.play()
+	#	ball.apply_central_impulse(Vector2.UP * ball_serve_power)
+	#	yield(get_tree(), "idle_frame")
+	#	ball.sleeping = true
+		if has_node("Net"):
+			$Net.reset_net(true)
 	yield(get_tree(), "physics_frame")
 	yield(get_tree(), "physics_frame")
 	yield(get_tree(), "physics_frame")
-	ball.linear_velocity = Vector2()
-	ball.angular_velocity = 0
+	if !freestyle or !initiated:
+		ball.linear_velocity = Vector2()
+		ball.angular_velocity = 0
 	ball.scored = false
+	initiated = true
 
 func _ready():
 	$P2Score.position = $P1Score.position
 	$P2Score.position.x = 512 - $P2Score.position.x
+	$StartScreen/Button.grab_focus()
 #	start()
 	Engine.time_scale = 1.0
 	get_tree().paused = true
 
 func _physics_process(delta):
-#	if get_tree().paused and !started and Input.is_action_just_pressed("ui_accept"):
-#		start()
-#		get_tree().paused = false
-#		started = true
 	if !get_tree().paused and Input.is_action_just_pressed("ui_cancel"):
 		get_tree().reload_current_scene()
 	for node in [$Border1, $Border2]:
 		node.offset = $Camera2D.offset / 2
+
+func _process(delta):
 	if Input.is_action_just_pressed("fullscreen"):
 		OS.window_fullscreen = !OS.window_fullscreen
 
@@ -109,22 +132,23 @@ func score(side: int, opposite = true):
 			var temp = scored_side
 			scored_side = opposite_side
 			opposite_side = temp
-		scores[scored_side] += 1
-		$FreezeTimer.start()
+		if !freestyle:
+			scores[scored_side] += 1
+			Engine.time_scale = 0.25
+		$FreezeTimer.start(0.25)
 		$Camera2D.screenshake(0.15, -ball.dir)
 		
 		ball.get_node("Score").play()
 	##	ball.contact_monitor = false
 	#	get_tree().paused = true
-		Engine.time_scale = 0.25
-		if scores[scored_side] >= max_score:
-			$EndGame.play()
-			end_game(scored_side)
-		else:
-			$Score.play()
+		
+		if !freestyle:
+			if scores[scored_side] >= max_score:
+				$EndGame.play()
+				end_game(scored_side)
+			else:
+				$Score.play()
 		score_sprites[scored_side].frame = scores[scored_side]
-	
-	pass
 
 func end_game(scored_side):
 	$FreezeTimer.start(0.5)
@@ -164,23 +188,65 @@ func hit_effect(pos, scored):
 func _on_FreezeTimer_timeout():
 	get_tree().paused = false
 	yield(get_tree(), "physics_frame")
-	start(scored_side)
+	if winner_serves:
+		start(scored_side)
+	else:
+		start((scored_side + 1) % 2)
 	Engine.time_scale = 1.0
 #	ball.contact_monitor = true
 #	pass # Replace with function body.
 
 func _on_HitFreezeTimer_timeout():
 	Engine.time_scale = 1.0
-	pass # Replace with function body.
 
 
 func _on_Button_pressed():
 	start()
 	get_tree().paused = false
 	started = true
-	pass # Replace with function body.
 
 
 func _on_CheckBox_toggled(button_pressed):
 	p2.ai = button_pressed
+	_on_Button_pressed()
+
+
+func _on_VsAi_pressed():
+	p2.ai = true
+	_on_Button_pressed()
+
+
+func _on_SideGoals_toggled(button_pressed):
+	for node in [$Border1, $Border2, $Bg]:
+		node.visible = button_pressed
+	side_goals = button_pressed
+
+
+func _on_Net_toggled(button_pressed):
+	$Net.visible = button_pressed
+	net = button_pressed
+	pass # Replace with function body.
+
+
+func _on_FreestyleMode_toggled(button_pressed):
+	freestyle = button_pressed
+	$P1Score.visible = !button_pressed
+	$P2Score.visible = !button_pressed
+	$P1Tally.visible = !button_pressed
+	$P2Tally.visible = !button_pressed
+	$StartScreen/Divider.disabled = !button_pressed
+	if !button_pressed:
+		$StartScreen/Divider.pressed = true
+#	_on_SideGoals_toggled(!button_pressed)
+	pass # Replace with function body.
+
+
+func _on_Divider_toggled(button_pressed):
+	$Divider.visible = button_pressed
+	divider = button_pressed
+	pass # Replace with function body.
+
+
+func _on_WinnerServes_toggled(button_pressed):
+	winner_serves = button_pressed
 	pass # Replace with function body.

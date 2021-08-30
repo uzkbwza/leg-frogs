@@ -67,6 +67,8 @@ func _on_Ball_body_entered(body):
 			num_bounces = 0
 		if body.is_in_group("floor"):
 			num_bounces += 1
+			if get_parent().freestyle:
+				num_bounces = 1
 			if num_bounces > 2:
 				emit_signal("hit", global_position, true)
 				get_parent().score(last_side_hit, true)
@@ -81,6 +83,10 @@ func _on_Ball_body_entered(body):
 		else:
 			emit_signal("hit", hit_point, false)
 	elif body.is_in_group("net"):
+		if linear_velocity.x < 0:
+			last_side_hit = Game.Side.Right
+		elif linear_velocity.x > 0:
+			last_side_hit = Game.Side.Left
 		if !scored:
 			get_parent().score(last_side_hit, true)
 		if can_hit_effect:

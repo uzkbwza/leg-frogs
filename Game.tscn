@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=2]
+[gd_scene load_steps=42 format=2]
 
 [ext_resource path="res://Frog.tscn" type="PackedScene" id=1]
 [ext_resource path="res://sprites/bg.png" type="Texture" id=2]
@@ -16,6 +16,9 @@
 [ext_resource path="res://Label.gd" type="Script" id=14]
 [ext_resource path="res://sounds/Pickup_coin 11 (1).wav" type="AudioStream" id=15]
 [ext_resource path="res://sprites/black.png" type="Texture" id=16]
+[ext_resource path="res://sprites/bg2.png" type="Texture" id=17]
+[ext_resource path="res://sprites/border2.png" type="Texture" id=18]
+[ext_resource path="res://sprites/divider.png" type="Texture" id=19]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 10, 128 )
@@ -112,6 +115,14 @@ pause_mode = 2
 script = ExtResource( 7 )
 max_score = 10
 
+[node name="Bg2" type="Sprite" parent="."]
+z_index = -1000
+texture = ExtResource( 17 )
+centered = false
+__meta__ = {
+"_edit_lock_": true
+}
+
 [node name="Bg" type="Sprite" parent="."]
 z_index = -1000
 texture = ExtResource( 2 )
@@ -121,6 +132,11 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="Divider" type="Sprite" parent="."]
+position = Vector2( 256, 128 )
+z_index = -999
+texture = ExtResource( 19 )
+
 [node name="Frog" parent="." instance=ExtResource( 1 )]
 pause_mode = 1
 position = Vector2( -71, 216 )
@@ -129,6 +145,18 @@ angular_damp = 2.575
 [node name="FrogP2" parent="." instance=ExtResource( 6 )]
 pause_mode = 1
 position = Vector2( 570, 209 )
+
+[node name="Border3" type="Sprite" parent="."]
+z_index = 2
+texture = ExtResource( 18 )
+centered = false
+
+[node name="Border4" type="Sprite" parent="."]
+position = Vector2( 256, 0 )
+z_index = 2
+texture = ExtResource( 18 )
+centered = false
+flip_h = true
 
 [node name="Border1" type="Sprite" parent="."]
 z_index = 2
@@ -145,7 +173,7 @@ flip_h = true
 [node name="Bounds" type="StaticBody2D" parent="." groups=[
 "bounds",
 ]]
-z_index = 1
+z_index = 2
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Bounds"]
@@ -190,7 +218,7 @@ shape = SubResource( 4 )
 "bounds",
 "floor",
 ]]
-z_index = 1
+z_index = 2
 collision_mask = 0
 
 [node name="CollisionShape2D4" type="CollisionShape2D" parent="Floor"]
@@ -207,6 +235,23 @@ shape = SubResource( 3 )
 position = Vector2( 435, 255 )
 rotation = 3.14159
 shape = SubResource( 3 )
+
+[node name="NoSideGoalsFloor" type="StaticBody2D" parent="." groups=[
+"bounds",
+"floor",
+]]
+z_index = 2
+collision_mask = 0
+
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="NoSideGoalsFloor"]
+position = Vector2( 38, 235 )
+shape = SubResource( 4 )
+disabled = true
+
+[node name="CollisionShape2D8" type="CollisionShape2D" parent="NoSideGoalsFloor"]
+position = Vector2( 474, 235 )
+shape = SubResource( 4 )
+disabled = true
 
 [node name="Wall" type="StaticBody2D" parent="."]
 z_index = 1
@@ -270,57 +315,6 @@ script = ExtResource( 9 )
 
 [node name="Tween" type="Tween" parent="Camera2D"]
 
-[node name="StartScreen" type="RichTextLabel" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = 105.0
-margin_top = 40.0
-margin_right = 407.0
-margin_bottom = 256.0
-rect_pivot_offset = Vector2( 350, 42 )
-theme = ExtResource( 10 )
-bbcode_enabled = true
-bbcode_text = "[center][color=#64d26b]Leg Frogs[/color][/center]
-
-controls:
-P1: Z/X
-P2: Left/Right (or mouse buttons)
-ESC to quit
-F11 to fullscreen"
-text = "Leg Frogs
-
-controls:
-P1: Z/X
-P2: Left/Right (or mouse buttons)
-ESC to quit
-F11 to fullscreen"
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="CheckBox" type="CheckBox" parent="StartScreen"]
-margin_left = 117.0
-margin_top = 65.0
-margin_right = 185.0
-margin_bottom = 89.0
-text = "vs ai"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Button" type="Button" parent="StartScreen"]
-margin_left = 121.0
-margin_top = 91.0
-margin_right = 181.0
-margin_bottom = 115.0
-text = "PLAY"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="Score" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 11 )
 bus = "Fx"
@@ -356,7 +350,8 @@ position = Vector2( 256, -63 )
 z_index = 1
 texture = ExtResource( 16 )
 
-[node name="Label" type="Label" parent="."]
+[node name="Winner" type="Label" parent="."]
+visible = false
 margin_left = 119.0
 margin_top = 128.0
 margin_right = 199.0
@@ -370,12 +365,147 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Flash" type="Timer" parent="Label"]
+[node name="Flash" type="Timer" parent="Winner"]
 wait_time = 0.032
 autostart = true
 
+[node name="StartScreen" type="RichTextLabel" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 105.0
+margin_top = 21.0
+margin_right = 407.0
+margin_bottom = 256.0
+rect_pivot_offset = Vector2( 350, 42 )
+rect_clip_content = false
+theme = ExtResource( 10 )
+bbcode_enabled = true
+bbcode_text = "[center][color=#64d26b]Leg Frogs[/color][/center]
+
+controls:
+
+P1: Z/X
+P2: Left/Right (or mouse buttons)
+both: L2/R2 on gamepad
+ESC to quit
+F11 for fullscreen"
+text = "Leg Frogs
+
+controls:
+
+P1: Z/X
+P2: Left/Right (or mouse buttons)
+both: L2/R2 on gamepad
+ESC to quit
+F11 for fullscreen"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VsAi" type="Button" parent="StartScreen"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -34.0
+margin_top = 81.0
+margin_right = 34.0
+margin_bottom = 105.0
+text = "VS CPU"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="StartScreen"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -33.0
+margin_top = 53.0
+margin_right = 34.0
+margin_bottom = 77.0
+text = "PLAY"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Net" type="CheckBox" parent="StartScreen"]
+margin_left = -28.0
+margin_top = 85.0
+margin_right = 24.0
+margin_bottom = 109.0
+pressed = true
+text = "Net"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SideGoals" type="CheckBox" parent="StartScreen"]
+margin_left = -29.0
+margin_top = 112.0
+margin_right = 79.0
+margin_bottom = 136.0
+pressed = true
+text = "Side Goals"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FloorGoals" type="CheckBox" parent="StartScreen"]
+margin_left = -29.0
+margin_top = 142.0
+margin_right = 87.0
+margin_bottom = 166.0
+disabled = true
+text = "Floor Goals"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FreestyleMode" type="CheckBox" parent="StartScreen"]
+margin_left = -28.0
+margin_top = 170.0
+margin_right = 72.0
+margin_bottom = 194.0
+text = "Freestyle"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Divider" type="CheckBox" parent="StartScreen"]
+margin_left = 2.0
+margin_top = 197.0
+margin_right = 102.0
+margin_bottom = 221.0
+disabled = true
+pressed = true
+text = "Divider"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WinnerServes" type="CheckBox" parent="StartScreen"]
+margin_left = 197.0
+margin_top = 84.0
+margin_right = 361.0
+margin_bottom = 108.0
+pressed = true
+text = "Winner Serves"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="timeout" from="FreezeTimer" to="." method="_on_FreezeTimer_timeout"]
 [connection signal="timeout" from="HitFreezeTimer" to="." method="_on_HitFreezeTimer_timeout"]
-[connection signal="toggled" from="StartScreen/CheckBox" to="." method="_on_CheckBox_toggled"]
+[connection signal="timeout" from="Winner/Flash" to="Winner" method="_on_Flash_timeout"]
+[connection signal="pressed" from="StartScreen/VsAi" to="." method="_on_VsAi_pressed"]
+[connection signal="toggled" from="StartScreen/VsAi" to="." method="_on_CheckBox_toggled"]
 [connection signal="pressed" from="StartScreen/Button" to="." method="_on_Button_pressed"]
-[connection signal="timeout" from="Label/Flash" to="Label" method="_on_Flash_timeout"]
+[connection signal="toggled" from="StartScreen/Net" to="." method="_on_Net_toggled"]
+[connection signal="toggled" from="StartScreen/SideGoals" to="." method="_on_SideGoals_toggled"]
+[connection signal="toggled" from="StartScreen/FreestyleMode" to="." method="_on_FreestyleMode_toggled"]
+[connection signal="toggled" from="StartScreen/Divider" to="." method="_on_Divider_toggled"]
+[connection signal="toggled" from="StartScreen/WinnerServes" to="." method="_on_WinnerServes_toggled"]

@@ -28,7 +28,7 @@ height = 6.0
 
 [node name="Frog" type="RigidBody2D"]
 collision_layer = 2
-collision_mask = 1057
+collision_mask = 1059
 mass = 0.5
 physics_material_override = SubResource( 1 )
 gravity_scale = 3.0
@@ -53,7 +53,7 @@ left = false
 input_action = "right_foot"
 
 [node name="ObjectCollider" type="StaticBody2D" parent="."]
-collision_layer = 4
+collision_layer = 6
 collision_mask = 0
 script = ExtResource( 2 )
 
@@ -82,7 +82,7 @@ z_index = 1
 shape = SubResource( 5 )
 
 [node name="LeftHipCollider" type="StaticBody2D" parent="."]
-collision_layer = 4
+collision_layer = 6
 collision_mask = 0
 script = ExtResource( 2 )
 
@@ -91,7 +91,7 @@ z_index = 1
 shape = SubResource( 6 )
 
 [node name="LeftKneeCollider" type="StaticBody2D" parent="."]
-collision_layer = 4
+collision_layer = 6
 collision_mask = 0
 script = ExtResource( 2 )
 
@@ -100,7 +100,7 @@ z_index = 1
 shape = SubResource( 6 )
 
 [node name="RightHipCollider" type="StaticBody2D" parent="."]
-collision_layer = 4
+collision_layer = 6
 collision_mask = 0
 script = ExtResource( 2 )
 
@@ -109,7 +109,7 @@ z_index = 1
 shape = SubResource( 6 )
 
 [node name="RightKneeCollider" type="StaticBody2D" parent="."]
-collision_layer = 4
+collision_layer = 6
 collision_mask = 0
 script = ExtResource( 2 )
 
