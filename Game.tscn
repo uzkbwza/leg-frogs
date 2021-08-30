@@ -119,9 +119,6 @@ max_score = 10
 z_index = -1000
 texture = ExtResource( 17 )
 centered = false
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="Bg" type="Sprite" parent="."]
 z_index = -1000

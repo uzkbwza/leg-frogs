@@ -63,8 +63,8 @@ func _on_Ball_body_entered(body):
 		last_side_hit = body.side
 		emit_signal("hit", hit_point, false)
 		var frog = body.get_frog()
-		if frog != last_hitter:
-			num_bounces = 0
+#		if frog != last_hitter:
+#			num_bounces = 0
 		last_hitter = frog
 	elif body.is_in_group("bounds"):
 		var new_side_hit

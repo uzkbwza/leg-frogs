@@ -16,8 +16,6 @@ var relative_to_net_point
 onready var net_rest_pos = end.global_position
 var hit = false
 
-signal foul(player)
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
