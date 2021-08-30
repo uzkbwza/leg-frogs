@@ -8,6 +8,7 @@ class_name Ball
 export var push_speed = 10
 var radius
 var last_side_hit = Game.Side.Left
+var last_hitter
 var queued_reset_pos = null
 var prev_pos = Vector2()
 var dir = Vector2()
@@ -34,10 +35,14 @@ func _integrate_forces(state):
 	if queued_reset_pos:
 		state.transform.origin = queued_reset_pos
 		queued_reset_pos = null
+		var new_side
 		if global_position.x > 256:
-			last_side_hit = Game.Side.Right
+			new_side = Game.Side.Right
 		else:
-			last_side_hit = Game.Side.Left
+			new_side = Game.Side.Left
+		if new_side != last_side_hit:
+			num_bounces = 0
+		last_side_hit = new_side
 	if state.get_contact_count():
 		var contact = state.get_contact_collider_position(0)
 		if contact:
@@ -57,6 +62,10 @@ func _on_Ball_body_entered(body):
 		apply_impulse(to_local(body.global_position), ((Vector2(cos(body.angle), sin(body.angle)) + (global_position - body.global_position).normalized()) / 2) * push_speed)
 		last_side_hit = body.side
 		emit_signal("hit", hit_point, false)
+		var frog = body.get_frog()
+		if frog != last_hitter:
+			num_bounces = 0
+		last_hitter = frog
 	elif body.is_in_group("bounds"):
 		var new_side_hit
 		if global_position.x > 256:

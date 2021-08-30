@@ -42,7 +42,10 @@ onready var score_sprites = {
 export var max_score = 1
 
 # Called when the node enters the scene tree for the first time.
-func start(side=[Side.Left, Side.Right][rng.randi() % 2]):
+func start(side=null):
+	if side == null:
+		side = rng.randi_range(0, 2)
+		print(side)
 	if !initiated:
 		if !side_goals:
 			$Border1.hide()
@@ -103,6 +106,7 @@ func _ready():
 #	start()
 	Engine.time_scale = 1.0
 	get_tree().paused = true
+	rng.randomize()
 
 func _physics_process(delta):
 	if !get_tree().paused and Input.is_action_just_pressed("ui_cancel"):
@@ -172,7 +176,6 @@ func hit_effect(pos, scored):
 #	if frog:
 #		$HitFreezeTimer.start()
 #		Engine.time_scale = 0.1
-	randomize()
 	var effect = hit_effect.instance()
 	if scored:
 		effect.color = Color("#ff333d")
